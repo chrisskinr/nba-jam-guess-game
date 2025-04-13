@@ -10,11 +10,13 @@ function App() {
   const [score, setScore] = useState(null);
   const [gameOver, setGameOver] = useState(false);
 
-  const [topXEnabled, setTopXEnabled] = useState(false);
-  const [topX, setTopX] = useState(100);
+  const [topXEnabled, setTopXEnabled] = useState(true); // default: true
+  const [topX, setTopX] = useState(100);                // default: 100
 
   const [totalPoints, setTotalPoints] = useState(0);
   const [roundsPlayed, setRoundsPlayed] = useState(0);
+
+  const [draftYearCutoff, setDraftYearCutoff] = useState(1980); // default: 1980
 
   // Load players.json
   useEffect(() => {
@@ -25,12 +27,18 @@ function App() {
       });
   }, []);
 
-  // Filter top X players by total stats (PTS + REB + AST)
+  // Filter and update player pool
   useEffect(() => {
     if (!players.length) return;
 
     let result = [...players];
 
+    // Filter by draft year
+    if (draftYearCutoff) {
+      result = result.filter((p) => p.clues?.draftYear >= draftYearCutoff);
+    }
+
+    // Top X filter
     if (topXEnabled) {
       result.sort((a, b) => {
         const sumA = (a.stats.PTS || 0) + (a.stats.REB || 0) + (a.stats.AST || 0);
@@ -42,7 +50,7 @@ function App() {
 
     setFilteredPlayers(result);
     setPlayer(result[Math.floor(Math.random() * result.length)]);
-  }, [players, topXEnabled, topX]);
+  }, [players, topXEnabled, topX, draftYearCutoff]);
 
   const handleSubmit = () => {
     if (!player) return;
@@ -59,7 +67,6 @@ function App() {
       } else {
         setScore(0);
         setGameOver(true);
-        setTotalPoints((prev) => prev);
         setRoundsPlayed((prev) => prev + 1);
       }
     }
@@ -88,6 +95,51 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-indigo-900 to-purple-900 text-white p-8 font-mono">
+
+      {/* Draft Year Filters */}
+      <div className="flex justify-center gap-3 mb-4 flex-wrap">
+        <button
+          onClick={() => setDraftYearCutoff(null)}
+          className={`px-3 py-1 rounded ${
+            draftYearCutoff === null ? "bg-green-500" : "bg-gray-600"
+          }`}
+        >
+          All Years
+        </button>
+        <button
+          onClick={() => setDraftYearCutoff(1980)}
+          className={`px-3 py-1 rounded ${
+            draftYearCutoff === 1980 ? "bg-green-500" : "bg-gray-600"
+          }`}
+        >
+          Since 1980
+        </button>
+        <button
+          onClick={() => setDraftYearCutoff(2000)}
+          className={`px-3 py-1 rounded ${
+            draftYearCutoff === 2000 ? "bg-green-500" : "bg-gray-600"
+          }`}
+        >
+          Since 2000
+        </button>
+        <button
+          onClick={() => setDraftYearCutoff(2010)}
+          className={`px-3 py-1 rounded ${
+            draftYearCutoff === 2010 ? "bg-green-500" : "bg-gray-600"
+          }`}
+        >
+          Since 2010
+        </button>
+        <button
+          onClick={() => setDraftYearCutoff(2020)}
+          className={`px-3 py-1 rounded ${
+            draftYearCutoff === 2020 ? "bg-green-500" : "bg-gray-600"
+          }`}
+        >
+          Since 2020
+        </button>
+      </div>
+
       {/* Top X Toggle */}
       <div className="flex justify-center items-center gap-4 mb-6">
         <label className="flex items-center gap-2">
