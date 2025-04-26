@@ -92,27 +92,27 @@ function App() {
 
   return (
     <div
-      className="min-h-screen flex justify-center items-center bg-cover bg-center bg-no-repeat text-white"
+      className="min-h-screen flex justify-center items-center bg-cover bg-center bg-no-repeat"
       style={{
         backgroundImage: "url('/f79d0981-5003-4ef9-a51a-a1494cd92ff8.png')",
         fontFamily: "'Press Start 2P', monospace",
       }}
     >
-      <div className="max-w-2xl w-full mx-auto bg-black bg-opacity-80 p-8 rounded-2xl space-y-6 ring-4 ring-indigo-500 shadow-2xl">
+      <div className="flex flex-col items-center w-full max-w-2xl mx-auto bg-black bg-opacity-80 p-8 rounded-2xl space-y-6 ring-4 ring-indigo-500 shadow-2xl">
 
         {/* Title */}
         <h1 className="text-4xl text-center tracking-widest animate-pulse">
-          🏀 NBA JAM GUESS GAME v4 🔥
+          🏀 NBA JAM GUESS GAME v5 🔥
         </h1>
 
         {/* Scoreboard */}
-        <div className="text-center bg-gray-900 p-4 rounded-xl border-2 border-indigo-300">
+        <div className="text-center bg-gray-900 p-4 rounded-xl border-2 border-indigo-300 w-full">
           <div>Total Points: {totalPoints}</div>
           <div>Avg Points/Round: {roundsPlayed > 0 ? (totalPoints / roundsPlayed).toFixed(2) : "-"}</div>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-3 w-full">
           {[
             { label: "All", year: null },
             { label: "1980+", year: 1980 },
@@ -133,7 +133,7 @@ function App() {
         </div>
 
         {/* Top X Control */}
-        <div className="flex justify-center items-center gap-4">
+        <div className="flex justify-center items-center gap-4 w-full">
           <label className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
@@ -154,7 +154,7 @@ function App() {
         </div>
 
         {/* Player Stats */}
-        <div className="bg-gray-800 p-6 rounded-xl shadow-inner border-4 border-blue-400">
+        <div className="bg-gray-800 p-6 rounded-xl shadow-inner border-4 border-blue-400 w-full">
           <h2 className="text-2xl text-center mb-4">Career Averages</h2>
           <ul className="space-y-2 text-lg text-center">
             {Object.entries(player.stats).map(([key, value]) => (
@@ -173,7 +173,7 @@ function App() {
 
         {/* Guess Input */}
         {!gameOver && (
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-4 w-full">
             <input
               type="text"
               value={guess}
@@ -192,7 +192,7 @@ function App() {
 
         {/* Reveal Clue */}
         {!gameOver && clueIndex < 3 && (
-          <div className="text-center">
+          <div className="text-center w-full">
             <button
               onClick={revealClue}
               className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-2 rounded-full font-bold transition-transform hover:scale-105"
@@ -204,7 +204,7 @@ function App() {
 
         {/* Additional Clues */}
         {player.clues && (
-          <div className="bg-gray-700 p-4 rounded-lg border-4 border-purple-500">
+          <div className="bg-gray-700 p-4 rounded-lg border-4 border-purple-500 w-full">
             <h3 className="text-xl mb-2">More Clues</h3>
             <ul className="list-disc pl-6 text-sm space-y-1">
               {['draftTeam']
@@ -228,7 +228,7 @@ function App() {
         )}
 
         {gameOver && (
-          <div className="text-center mt-2">
+          <div className="text-center mt-2 w-full">
             <button
               onClick={nextPlayer}
               className="bg-green-400 hover:bg-green-300 text-black px-6 py-2 rounded-full font-bold transition-transform hover:scale-105"
