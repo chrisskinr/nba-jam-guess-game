@@ -98,18 +98,20 @@ function App() {
         fontFamily: "'Press Start 2P', monospace",
       }}
     >
-        <div className="w-full max-w-xl mx-auto backdrop-blur-md bg-black bg-opacity-70 p-6 rounded-xl space-y-6">
+      <div className="w-full max-w-xl mx-auto backdrop-blur-md bg-black bg-opacity-70 p-6 rounded-xl space-y-6">
 
-
+        {/* Title */}
         <h1 className="text-3xl text-center tracking-widest animate-pulse">
           🏀 NBA JAM GUESS GAME 🔥
         </h1>
 
+        {/* Scoreboard */}
         <div className="text-center bg-gray-900 p-4 rounded-xl shadow-lg border-4 border-indigo-500">
           <div>Total Points: {totalPoints}</div>
           <div>Avg Points/Round: {roundsPlayed > 0 ? (totalPoints / roundsPlayed).toFixed(2) : "-"}</div>
         </div>
 
+        {/* Filters */}
         <div className="flex flex-wrap justify-center gap-3">
           {[
             { label: "All", year: null },
@@ -130,6 +132,7 @@ function App() {
           ))}
         </div>
 
+        {/* Top X control */}
         <div className="flex justify-center items-center gap-4">
           <label className="flex items-center gap-2">
             <input
@@ -151,6 +154,7 @@ function App() {
           />
         </div>
 
+        {/* Player Stats */}
         <div className="bg-gray-800 p-6 rounded-xl shadow-inner border-4 border-blue-500">
           <h2 className="text-xl text-center mb-4">Career Averages</h2>
           <ul className="space-y-2 text-lg text-center">
@@ -161,12 +165,14 @@ function App() {
             ))}
           </ul>
 
+          {/* Always show draft year and pick */}
           <div className="mt-6 text-center space-y-2">
             <div>🗓️ Draft Year: {player.clues?.draftYear ?? "?"}</div>
             <div>🏅 Draft Pick: {player.clues?.draftPick ?? "?"}</div>
           </div>
         </div>
 
+        {/* Guess input */}
         {!gameOver && (
           <div className="flex justify-center mb-2">
             <input
@@ -185,6 +191,7 @@ function App() {
           </div>
         )}
 
+        {/* Reveal Clue */}
         {!gameOver && clueIndex < 3 && (
           <div className="text-center">
             <button
@@ -196,12 +203,13 @@ function App() {
           </div>
         )}
 
+        {/* Additional Clues */}
         {player.clues && (
           <div className="bg-gray-700 p-4 rounded-lg border-4 border-purple-500">
             <h3 className="text-xl mb-2">More Clues</h3>
             <ul className="list-disc pl-6 text-sm space-y-1">
               {Object.entries(player.clues)
-                .slice(2, 2 + clueIndex) // ✅ Skip Year & Pick
+                .slice(2, 2 + clueIndex) // only reveal real clues after year/pick
                 .map(([label, value], index) => (
                   <li key={index}>
                     {label.charAt(0).toUpperCase() + label.slice(1)}: {value}
@@ -211,6 +219,7 @@ function App() {
           </div>
         )}
 
+        {/* Results */}
         {gameOver && (
           <div className={`text-center mt-4 text-xl font-bold ${
             isCorrect ? "animate-bounce text-green-400" : "animate-shake text-red-400"
@@ -233,6 +242,7 @@ function App() {
             </button>
           </div>
         )}
+
       </div>
     </div>
   );
