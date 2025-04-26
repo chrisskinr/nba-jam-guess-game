@@ -74,46 +74,46 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex justify-center items-center p-4">
-      <div className="w-[640px] border-8 border-white p-6 bg-black flex flex-col space-y-6">
+    <div className="min-h-screen bg-black text-white flex justify-center items-center">
+      <div className="w-[500px] border-8 border-white bg-black p-6 flex flex-col items-center space-y-6 text-center">
 
         {/* Title */}
-        <div style={{ margin: "0 auto", width: "fit-content" }}>
-          <h1 className="text-4xl text-center animate-pulse">
-            🏀 NBA JAM GUESS GAME v8 🔥
-          </h1>
-        </div>
+        <h1 className="text-3xl font-bold tracking-wide animate-pulse">
+          🏀 NBA JAM GUESS GAME v9 🔥
+        </h1>
 
         {/* Scoreboard */}
-        <div className="border-2 border-white p-4" style={{ margin: "0 auto", width: "fit-content" }}>
+        <div className="border-2 border-white rounded p-4 w-full">
           <div>Total Points: {totalPoints}</div>
           <div>Avg Points/Round: {roundsPlayed > 0 ? (totalPoints / roundsPlayed).toFixed(2) : "-"}</div>
         </div>
 
         {/* Career Averages */}
-        <div className="border-2 border-white p-4 w-full">
-          <h2 className="text-2xl text-center mb-2">Career Averages</h2>
-          <ul className="text-center space-y-1">
+        <div className="border-2 border-white rounded p-4 w-full">
+          <h2 className="text-xl uppercase font-bold mb-2">Career Averages</h2>
+          <ul className="space-y-1">
             {Object.entries(player.stats).map(([key, value]) => (
               <li key={key}>
                 {key}: {value ?? "N/A"}
               </li>
             ))}
           </ul>
-          <div className="mt-2 text-center">
-            🗓️ Draft Year: {player.clues?.draftYear ?? "?"} | 🏅 Pick: {player.clues?.draftPick ?? "?"}
-          </div>
+        </div>
+
+        {/* Draft Info */}
+        <div className="text-sm text-white">
+          🗓️ Draft Year: {player.clues?.draftYear ?? "?"} | 🏅 Pick: {player.clues?.draftPick ?? "?"}
         </div>
 
         {/* Guess Input */}
         {!gameOver && (
-          <div className="border-2 border-white p-4 flex justify-center items-center">
+          <div className="flex justify-center items-center gap-2">
             <input
               type="text"
               value={guess}
               onChange={(e) => setGuess(e.target.value)}
               placeholder="Last name..."
-              className="px-4 py-2 rounded-l text-black w-64"
+              className="px-4 py-2 rounded-l text-black w-48"
             />
             <button
               onClick={handleSubmit}
@@ -126,26 +126,25 @@ function App() {
 
         {/* Reveal Clue */}
         {!gameOver && clueIndex < 3 && (
-          <div className="border-2 border-white p-4 flex justify-center">
-            <button
-              onClick={revealClue}
-              className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-2 rounded font-bold"
-            >
-              Reveal Clue
-            </button>
-          </div>
+          <button
+            onClick={revealClue}
+            className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-2 rounded font-bold"
+          >
+            Reveal Clue
+          </button>
         )}
 
-        {/* Clues */}
+        {/* Additional Clues */}
         {clueIndex > 0 && (
-          <div className="border-2 border-white p-4 text-center">
-            <div className="text-lg">🏀 Draft Team: {player.clues?.draftTeam ?? "???"}</div>
+          <div className="border-2 border-purple-400 rounded p-4 w-full">
+            <h3 className="font-bold text-lg mb-2">Clue Unlocked:</h3>
+            <div>{player.clues?.draftTeam ?? "???"}</div>
           </div>
         )}
 
         {/* Results */}
         {gameOver && (
-          <div className="border-2 border-white p-4 text-center">
+          <div className="border-2 border-white p-4 rounded w-full">
             {isCorrect ? (
               <div className="text-green-400 font-bold animate-bounce">
                 🔥 Correct! {score} points!
@@ -163,7 +162,6 @@ function App() {
             </button>
           </div>
         )}
-
       </div>
     </div>
   );
