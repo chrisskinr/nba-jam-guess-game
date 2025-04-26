@@ -10,15 +10,14 @@ function App() {
   const [score, setScore] = useState(null);
   const [gameOver, setGameOver] = useState(false);
 
-  const [topXEnabled, setTopXEnabled] = useState(true); // default: true
-  const [topX, setTopX] = useState(100);                // default: 100
+  const [topXEnabled, setTopXEnabled] = useState(true);
+  const [topX, setTopX] = useState(100);
 
   const [totalPoints, setTotalPoints] = useState(0);
   const [roundsPlayed, setRoundsPlayed] = useState(0);
 
-  const [draftYearCutoff, setDraftYearCutoff] = useState(1980); // default: 1980
+  const [draftYearCutoff, setDraftYearCutoff] = useState(1980);
 
-  // Load players.json
   useEffect(() => {
     fetch("/players.json")
       .then((res) => res.json())
@@ -27,18 +26,15 @@ function App() {
       });
   }, []);
 
-  // Filter and update player pool
   useEffect(() => {
     if (!players.length) return;
 
     let result = [...players];
 
-    // Filter by draft year
     if (draftYearCutoff) {
       result = result.filter((p) => p.clues?.draftYear >= draftYearCutoff);
     }
 
-    // Top X filter
     if (topXEnabled) {
       result.sort((a, b) => {
         const sumA = (a.stats.PTS || 0) + (a.stats.REB || 0) + (a.stats.AST || 0);
@@ -94,43 +90,67 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-indigo-900 to-purple-900 text-white p-8 font-mono">
-
+    <div className="min-h-screen bg-gradient-to-b from-black via-purple-900 to-black text-white p-8 font-mono" style={{ fontFamily: "'Press Start 2P', monospace" }}>
       {/* Draft Year Filters */}
       <div className="flex justify-center gap-3 mb-4 flex-wrap">
-        {/* ... filter buttons remain unchanged ... */}
+        {[
+          { label: "All", year: null },
+          { label: "1980+", year: 1980 },
+          { label: "2000+", year: 2000 },
+          { label: "2010+", year: 2010 },
+          { label: "2020+", year: 2020 },
+        ].map(({ label, year }) => (
+          <button
+            key={label}
+            onClick={() => setDraftYearCutoff(year)}
+            className={`px-4 py-2 rounded shadow-md transition-all duration-200 ${
+              draftYearCutoff === year ? "bg-green-400 scale-105" : "bg-gray-600 hover:bg-gray-500"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* Top X Toggle */}
       <div className="flex justify-center items-center gap-4 mb-6">
-        {/* ... topX controls remain unchanged ... */}
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={topXEnabled}
+            onChange={(e) => setTopXEnabled(e.target.checked)}
+          />
+          <span className="text-sm">Top X Only</span>
+        </label>
+
+        <input
+          type="number"
+          min="1"
+          max="2000"
+          value={topX}
+          onChange={(e) => setTopX(parseInt(e.target.value))}
+          disabled={!topXEnabled}
+          className="w-20 px-2 py-1 text-black rounded"
+        />
       </div>
 
-      <h1 className="text-4xl text-center mb-2">🏀 NBA Jam Guess Game 🔥</h1>
+      <h1 className="text-3xl text-center mb-6 tracking-widest animate-pulse">🏀 NBA JAM GUESS GAME 🔥</h1>
 
       {/* Score Summary */}
-      <div className="text-center text-sm text-gray-300 mb-6">
+      <div className="text-center mb-6 text-sm bg-gray-900 p-4 rounded-xl shadow-inner">
         <div>Total Points: {totalPoints}</div>
-        <div>Average Per Round: {roundsPlayed > 0 ? (totalPoints / roundsPlayed).toFixed(2) : "-"}</div>
+        <div>Avg Points/Round: {roundsPlayed > 0 ? (totalPoints / roundsPlayed).toFixed(2) : "-"}</div>
       </div>
 
-      {/* Player Stats */}
-      <div className="bg-gray-800 p-4 rounded-xl max-w-md mx-auto mb-6 shadow-lg">
-        <h2 className="text-2xl mb-4 text-center">Career Averages</h2>
+      {/* Player Stats Card */}
+      <div className="bg-gray-800 p-6 rounded-2xl max-w-md mx-auto mb-6 shadow-lg ring-2 ring-indigo-500">
+        <h2 className="text-xl text-center mb-4 tracking-widest">Career Averages</h2>
         <ul className="space-y-2 text-lg">
           {Object.entries(player.stats).map(([key, value]) => (
             <li key={key}>
               {key}: {value ?? "N/A"}
             </li>
           ))}
-
-          {/* Add Draft Info */}
-          {player.clues?.draftPick !== undefined && (
-            <li>Draft Pick: #{player.clues.draftPick}</li>
-          )}
-          {player.clues?.draftTeam && (
-            <li>Drafted By: {player.clues.draftTeam}</li>
-          )}
         </ul>
       </div>
 
@@ -141,37 +161,36 @@ function App() {
             type="text"
             value={guess}
             onChange={(e) => setGuess(e.target.value)}
-            placeholder="Guess the last name..."
-            className="px-4 py-2 rounded-l-lg text-black w-64"
+            placeholder="Last name..."
+            className="px-4 py-2 rounded-l-xl text-black w-64 border border-gray-300"
           />
           <button
             onClick={handleSubmit}
-            className="bg-yellow-400 text-black px-4 py-2 rounded-r-lg hover:bg-yellow-300 font-bold"
+            className="bg-yellow-400 hover:bg-yellow-300 text-black px-4 py-2 rounded-r-xl font-bold transition-transform transform hover:scale-105"
           >
             Submit
           </button>
         </div>
       )}
 
-      {/* Reveal Clue Button */}
+      {/* Reveal Clue */}
       {!gameOver && clueIndex < 3 && (
         <div className="text-center mb-6">
           <button
             onClick={revealClue}
-            className="bg-blue-400 hover:bg-blue-300 text-black px-6 py-2 rounded-full font-bold"
+            className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-2 rounded-full font-bold transition-transform transform hover:scale-105"
           >
             Reveal Clue
           </button>
         </div>
       )}
 
-      {/* Clues */}
+      {/* Clues Display */}
       {player.clues && (
-        <div className="bg-gray-700 max-w-md mx-auto p-4 rounded-lg shadow-md">
+        <div className="bg-gray-700 max-w-md mx-auto p-4 rounded-lg shadow-lg">
           <h3 className="text-xl mb-2">Clues</h3>
           <ul className="list-disc pl-6 text-sm space-y-1">
             {Object.entries(player.clues)
-              .filter(([label]) => label !== "draftPick" && label !== "draftTeam")
               .slice(0, clueIndex)
               .map(([label, value], index) => (
                 <li key={index}>
@@ -182,21 +201,23 @@ function App() {
         </div>
       )}
 
-      {/* Result */}
+      {/* Results */}
       {gameOver && (
         <div className="text-center mt-6 text-xl font-bold">
-          {isCorrect
-            ? `🔥 Correct! You scored ${score} points.`
-            : `❌ Out of guesses. The answer was ${player.name}.`}
+          {isCorrect ? (
+            <span className="text-green-400">🔥 Correct! {score} points!</span>
+          ) : (
+            <span className="text-red-400">❌ The answer was {player.name}</span>
+          )}
         </div>
       )}
 
-      {/* Next Player Button */}
+      {/* Next Player */}
       {gameOver && (
         <div className="text-center mt-4">
           <button
             onClick={nextPlayer}
-            className="mt-2 bg-green-400 hover:bg-green-300 text-black px-6 py-2 rounded-full font-bold"
+            className="mt-2 bg-green-400 hover:bg-green-300 text-black px-6 py-2 rounded-full font-bold transition-transform transform hover:scale-105"
           >
             Next Player
           </button>
