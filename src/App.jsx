@@ -92,13 +92,16 @@ function App() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-black via-purple-900 to-black text-white p-6 font-mono"
-      style={{ fontFamily: "'Press Start 2P', monospace" }}
+      className="min-h-screen bg-cover bg-center text-white font-mono flex items-center justify-center px-4"
+      style={{
+        backgroundImage: "url('/f79d0981-5003-4ef9-a51a-a1494cd92ff8.png')",
+        fontFamily: "'Press Start 2P', monospace",
+      }}
     >
-      <div className="w-full max-w-xl space-y-6">
+      <div className="w-full max-w-xl backdrop-blur-md bg-black bg-opacity-70 p-6 rounded-xl space-y-6">
 
         {/* Title */}
-        <h1 className="text-3xl text-center mb-2 tracking-widest animate-pulse">
+        <h1 className="text-3xl text-center tracking-widest animate-pulse">
           🏀 NBA JAM GUESS GAME 🔥
         </h1>
 
@@ -108,7 +111,7 @@ function App() {
           <div>Avg Points/Round: {roundsPlayed > 0 ? (totalPoints / roundsPlayed).toFixed(2) : "-"}</div>
         </div>
 
-        {/* Year Filters */}
+        {/* Filters */}
         <div className="flex flex-wrap justify-center gap-3">
           {[
             { label: "All", year: null },
@@ -129,7 +132,6 @@ function App() {
           ))}
         </div>
 
-        {/* Top X */}
         <div className="flex justify-center items-center gap-4">
           <label className="flex items-center gap-2">
             <input
@@ -162,14 +164,14 @@ function App() {
             ))}
           </ul>
 
-          {/* NEW: Always Show Draft Info */}
+          {/* Draft info always visible */}
           <div className="mt-6 text-center space-y-2">
             <div>🗓️ Draft Year: {player.clues?.draftYear ?? "?"}</div>
             <div>🏅 Draft Pick: {player.clues?.draftPick ?? "?"}</div>
           </div>
         </div>
 
-        {/* Guess Input */}
+        {/* Guess */}
         {!gameOver && (
           <div className="flex justify-center mb-2">
             <input
@@ -188,7 +190,6 @@ function App() {
           </div>
         )}
 
-        {/* Reveal Clue */}
         {!gameOver && clueIndex < 3 && (
           <div className="text-center">
             <button
@@ -200,9 +201,9 @@ function App() {
           </div>
         )}
 
-        {/* Additional Clues */}
+        {/* More Clues */}
         {player.clues && (
-          <div className="bg-gray-700 p-4 rounded-lg border-4 border-purple-500 animate-fade-in">
+          <div className="bg-gray-700 p-4 rounded-lg border-4 border-purple-500">
             <h3 className="text-xl mb-2">More Clues</h3>
             <ul className="list-disc pl-6 text-sm space-y-1">
               {Object.entries(player.clues)
@@ -216,7 +217,7 @@ function App() {
           </div>
         )}
 
-        {/* Results with Animations */}
+        {/* Results */}
         {gameOver && (
           <div className={`text-center mt-4 text-xl font-bold ${
             isCorrect ? "animate-bounce text-green-400" : "animate-shake text-red-400"
@@ -229,7 +230,6 @@ function App() {
           </div>
         )}
 
-        {/* Next Player */}
         {gameOver && (
           <div className="text-center mt-2">
             <button
@@ -240,7 +240,6 @@ function App() {
             </button>
           </div>
         )}
-
       </div>
     </div>
   );
