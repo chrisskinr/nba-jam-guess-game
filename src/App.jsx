@@ -92,19 +92,18 @@ function App() {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center bg-no-repeat flex justify-center items-center px-4 text-white"
+      className="min-h-screen flex justify-center items-center bg-cover bg-center bg-no-repeat text-white px-4"
       style={{
         backgroundImage: "url('/f79d0981-5003-4ef9-a51a-a1494cd92ff8.png')",
         fontFamily: "'Press Start 2P', monospace",
       }}
     >
-      <div className="w-full max-w-2xl mx-auto bg-black bg-opacity-80 p-8 rounded-2xl space-y-6 ring-4 ring-indigo-500 shadow-[0_0_30px_5px_rgba(99,102,241,0.7)]">
+      <div className="w-full max-w-2xl mx-auto bg-black bg-opacity-80 p-8 rounded-2xl space-y-6 ring-4 ring-indigo-500 shadow-2xl">
 
         {/* Title */}
-        <h1 className="text-4xl text-center animate-pulse tracking-widest">
+        <h1 className="text-4xl text-center tracking-widest animate-pulse">
           🏀 NBA JAM GUESS GAME v1 🔥
         </h1>
-
 
         {/* Scoreboard */}
         <div className="text-center bg-gray-900 p-4 rounded-xl border-2 border-indigo-300">
@@ -133,7 +132,7 @@ function App() {
           ))}
         </div>
 
-        {/* Top X control */}
+        {/* Top X Control */}
         <div className="flex justify-center items-center gap-4">
           <label className="flex items-center gap-2 text-sm">
             <input
