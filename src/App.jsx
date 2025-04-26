@@ -92,23 +92,21 @@ function App() {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center text-white font-mono flex justify-center items-center px-4"
+      className="min-h-screen bg-cover bg-center bg-no-repeat flex justify-center items-center px-4 text-white"
       style={{
         backgroundImage: "url('/f79d0981-5003-4ef9-a51a-a1494cd92ff8.png')",
         fontFamily: "'Press Start 2P', monospace",
       }}
     >
-<   div className="w-full max-w-xl mx-auto backdrop-blur-md bg-black bg-opacity-70 p-6 rounded-xl space-y-6">
-
+      <div className="w-full max-w-2xl mx-auto bg-black bg-opacity-80 p-8 rounded-2xl space-y-6 ring-4 ring-indigo-500 shadow-[0_0_30px_5px_rgba(99,102,241,0.7)]">
 
         {/* Title */}
-        <h1 className="text-3xl text-center tracking-widest animate-pulse">
-          🏀 JAM TIME TRIVIA 🔥
+        <h1 className="text-4xl text-center animate-pulse tracking-widest">
+          🏀 NBA JAM GUESS GAME 🔥
         </h1>
 
-
         {/* Scoreboard */}
-        <div className="text-center bg-gray-900 p-4 rounded-xl shadow-lg border-4 border-indigo-500">
+        <div className="text-center bg-gray-900 p-4 rounded-xl border-2 border-indigo-300">
           <div>Total Points: {totalPoints}</div>
           <div>Avg Points/Round: {roundsPlayed > 0 ? (totalPoints / roundsPlayed).toFixed(2) : "-"}</div>
         </div>
@@ -125,7 +123,7 @@ function App() {
             <button
               key={label}
               onClick={() => setDraftYearCutoff(year)}
-              className={`px-3 py-2 rounded-md shadow-md transition-all duration-200 ${
+              className={`px-4 py-2 rounded-lg shadow-md transition-all ${
                 draftYearCutoff === year ? "bg-green-400 scale-105" : "bg-gray-700 hover:bg-gray-600"
               }`}
             >
@@ -136,15 +134,14 @@ function App() {
 
         {/* Top X control */}
         <div className="flex justify-center items-center gap-4">
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
               checked={topXEnabled}
               onChange={(e) => setTopXEnabled(e.target.checked)}
             />
-            <span className="text-xs">Top X Only</span>
+            Top {topX}
           </label>
-
           <input
             type="number"
             min="1"
@@ -157,8 +154,8 @@ function App() {
         </div>
 
         {/* Player Stats */}
-        <div className="bg-gray-800 p-6 rounded-xl shadow-inner border-4 border-blue-500">
-          <h2 className="text-xl text-center mb-4">Career Averages</h2>
+        <div className="bg-gray-800 p-6 rounded-xl shadow-inner border-4 border-blue-400">
+          <h2 className="text-2xl text-center mb-4">Career Averages</h2>
           <ul className="space-y-2 text-lg text-center">
             {Object.entries(player.stats).map(([key, value]) => (
               <li key={key}>
@@ -168,15 +165,15 @@ function App() {
           </ul>
 
           {/* Always show draft year and pick */}
-          <div className="mt-6 text-center space-y-2">
+          <div className="mt-6 text-center space-y-2 text-lg">
             <div>🗓️ Draft Year: {player.clues?.draftYear ?? "?"}</div>
             <div>🏅 Draft Pick: {player.clues?.draftPick ?? "?"}</div>
           </div>
         </div>
 
-        {/* Guess input */}
+        {/* Guess Input */}
         {!gameOver && (
-          <div className="flex justify-center mb-2">
+          <div className="flex justify-center mb-4">
             <input
               type="text"
               value={guess}
@@ -207,31 +204,26 @@ function App() {
 
         {/* Additional Clues */}
         {player.clues && (
-        <div className="bg-gray-700 p-4 rounded-lg border-4 border-purple-500">
-          <h3 className="text-xl mb-2">More Clues</h3>
-          <ul className="list-disc pl-6 text-sm space-y-1">
-            {['draftTeam']
-              .slice(0, clueIndex)
-              .map((key, index) => (
-                <li key={index}>
-                  Draft Team: {player.clues[key]}
-                </li>
-              ))}
-          </ul>
-        </div>
-      )}
-
+          <div className="bg-gray-700 p-4 rounded-lg border-4 border-purple-500">
+            <h3 className="text-xl mb-2">More Clues</h3>
+            <ul className="list-disc pl-6 text-sm space-y-1">
+              {['draftTeam']
+                .slice(0, clueIndex)
+                .map((key, index) => (
+                  <li key={index}>
+                    Draft Team: {player.clues[key]}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        )}
 
         {/* Results */}
         {gameOver && (
-          <div className={`text-center mt-4 text-xl font-bold ${
+          <div className={`text-center mt-4 text-2xl font-bold ${
             isCorrect ? "animate-bounce text-green-400" : "animate-shake text-red-400"
           }`}>
-            {isCorrect ? (
-              `🔥 Correct! ${score} points!`
-            ) : (
-              `❌ The answer was ${player.name}`
-            )}
+            {isCorrect ? `🔥 Correct! ${score} points!` : `❌ The answer was ${player.name}`}
           </div>
         )}
 
@@ -239,7 +231,7 @@ function App() {
           <div className="text-center mt-2">
             <button
               onClick={nextPlayer}
-              className="mt-2 bg-green-400 hover:bg-green-300 text-black px-6 py-2 rounded-full font-bold transition-transform hover:scale-105"
+              className="bg-green-400 hover:bg-green-300 text-black px-6 py-2 rounded-full font-bold transition-transform hover:scale-105"
             >
               Next Player
             </button>
