@@ -205,19 +205,20 @@ function App() {
 
         {/* Additional Clues */}
         {player.clues && (
-          <div className="bg-gray-700 p-4 rounded-lg border-4 border-purple-500">
-            <h3 className="text-xl mb-2">More Clues</h3>
-            <ul className="list-disc pl-6 text-sm space-y-1">
-              {Object.entries(player.clues)
-                .slice(2, 2 + clueIndex) // only reveal real clues after year/pick
-                .map(([label, value], index) => (
-                  <li key={index}>
-                    {label.charAt(0).toUpperCase() + label.slice(1)}: {value}
-                  </li>
-                ))}
-            </ul>
-          </div>
-        )}
+        <div className="bg-gray-700 p-4 rounded-lg border-4 border-purple-500">
+          <h3 className="text-xl mb-2">More Clues</h3>
+          <ul className="list-disc pl-6 text-sm space-y-1">
+            {['draftTeam']
+              .slice(0, clueIndex)
+              .map((key, index) => (
+                <li key={index}>
+                  Draft Team: {player.clues[key]}
+                </li>
+              ))}
+          </ul>
+        </div>
+      )}
+
 
         {/* Results */}
         {gameOver && (
