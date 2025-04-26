@@ -102,8 +102,9 @@ function App() {
 
         {/* Title */}
         <h1 className="text-4xl text-center tracking-widest animate-pulse">
-          🏀 NBA JAM GUESS GAME v1 🔥
+           🏀 NBA JAM GUESS GAME v2 🔥
         </h1>
+
 
         {/* Scoreboard */}
         <div className="text-center bg-gray-900 p-4 rounded-xl border-2 border-indigo-300">
