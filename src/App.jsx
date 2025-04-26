@@ -92,20 +92,18 @@ function App() {
 
   return (
     <div
-      className="min-h-screen flex justify-center items-center bg-cover bg-center bg-no-repeat text-white px-4"
+      className="min-h-screen flex justify-center items-center bg-cover bg-center bg-no-repeat text-white"
       style={{
         backgroundImage: "url('/f79d0981-5003-4ef9-a51a-a1494cd92ff8.png')",
         fontFamily: "'Press Start 2P', monospace",
       }}
     >
-<div className="max-w-2xl mx-auto bg-black bg-opacity-80 p-8 rounded-2xl space-y-6 ring-4 ring-indigo-500 shadow-2xl">
-
+      <div className="max-w-2xl w-full mx-auto bg-black bg-opacity-80 p-8 rounded-2xl space-y-6 ring-4 ring-indigo-500 shadow-2xl">
 
         {/* Title */}
         <h1 className="text-4xl text-center tracking-widest animate-pulse">
-           🏀 NBA JAM GUESS GAME v3 🔥
+          🏀 NBA JAM GUESS GAME v4 🔥
         </h1>
-
 
         {/* Scoreboard */}
         <div className="text-center bg-gray-900 p-4 rounded-xl border-2 border-indigo-300">
