@@ -98,7 +98,8 @@ function App() {
         fontFamily: "'Press Start 2P', monospace",
       }}
     >
-      <div className="w-full max-w-xl mx-auto backdrop-blur-md bg-black bg-opacity-70 p-6 rounded-xl space-y-6">
+<   div className="w-full max-w-xl mx-auto backdrop-blur-md bg-black bg-opacity-70 p-6 rounded-xl space-y-6">
+
 
         {/* Title */}
         <h1 className="text-3xl text-center tracking-widest animate-pulse">
