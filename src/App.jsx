@@ -1,61 +1,168 @@
+import { useState, useEffect } from "react";
+
 function App() {
+  const [players, setPlayers] = useState([]);
+  const [filteredPlayers, setFilteredPlayers] = useState([]);
+  const [player, setPlayer] = useState(null);
+  const [guess, setGuess] = useState("");
+  const [clueIndex, setClueIndex] = useState(0);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [score, setScore] = useState(null);
+  const [gameOver, setGameOver] = useState(false);
+
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [roundsPlayed, setRoundsPlayed] = useState(0);
+
+  useEffect(() => {
+    fetch("/players.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setPlayers(data);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!players.length) return;
+    setFilteredPlayers(players);
+    setPlayer(players[Math.floor(Math.random() * players.length)]);
+  }, [players]);
+
+  const handleSubmit = () => {
+    if (!player) return;
+    if (guess.trim().toLowerCase() === player.lastName.toLowerCase()) {
+      const points = [10, 5, 3, 1][clueIndex];
+      setScore(points);
+      setIsCorrect(true);
+      setGameOver(true);
+      setTotalPoints((prev) => prev + points);
+      setRoundsPlayed((prev) => prev + 1);
+    } else {
+      if (clueIndex < 3) {
+        setClueIndex(clueIndex + 1);
+      } else {
+        setScore(0);
+        setIsCorrect(false);
+        setGameOver(true);
+        setRoundsPlayed((prev) => prev + 1);
+      }
+    }
+    setGuess("");
+  };
+
+  const revealClue = () => {
+    if (clueIndex < 3) {
+      setClueIndex(clueIndex + 1);
+    }
+  };
+
+  const nextPlayer = () => {
+    const next = filteredPlayers[Math.floor(Math.random() * filteredPlayers.length)];
+    setPlayer(next);
+    setGuess("");
+    setClueIndex(0);
+    setIsCorrect(false);
+    setScore(null);
+    setGameOver(false);
+  };
+
+  if (!player) {
+    return (
+      <div className="min-h-screen bg-black text-white flex justify-center items-center">
+        Loading player data...
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-black text-white text-xl space-y-10 p-10">
-      
-      {/* 1. Tailwind Flexbox + h-screen (fixed) */}
-      <div className="h-screen flex justify-center items-center border-2 border-red-500">
-        <div>🏀 1. Flexbox (h-screen)</div>
-      </div>
+    <div className="min-h-screen bg-black text-white flex justify-center items-center">
+      <div className="w-[500px] border-8 border-white bg-black p-6 flex flex-col items-center space-y-6 text-center">
 
-      {/* 2. Tailwind Grid + h-screen */}
-      <div className="h-screen grid place-items-center border-2 border-green-500">
-        <div>🏀 2. Grid Center (h-screen)</div>
-      </div>
+        {/* Title */}
+        <h1 className="text-3xl font-bold tracking-wide animate-pulse">
+          🏀 NBA JAM GUESS GAME v9 🔥
+        </h1>
 
-      {/* 3. Flex with explicit width/height on parent + margin auto */}
-      <div className="border-2 border-blue-500" style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
-        <div style={{ width: "fit-content", margin: "0 auto" }}>🏀 3. Inline Margin Auto (fixed height)</div>
-      </div>
-
-      {/* 4. Absolute with fixed height + relative wrapper */}
-      <div className="relative border-2 border-yellow-500" style={{ height: "100vh" }}>
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          🏀 4. Absolute + Transform (fixed wrapper)
+        {/* Scoreboard */}
+        <div className="border-2 border-white rounded p-4 w-full">
+          <div>Total Points: {totalPoints}</div>
+          <div>Avg Points/Round: {roundsPlayed > 0 ? (totalPoints / roundsPlayed).toFixed(2) : "-"}</div>
         </div>
-      </div>
 
-      {/* 5. Flexbox Column Nested */}
-      <div className="h-screen flex flex-col justify-center items-center border-2 border-pink-500">
-        <div>🏀 5. Flex Column Nested</div>
-      </div>
-
-      {/* 6. Fixed + Inset Correctly Applied */}
-      <div className="relative border-2 border-purple-500" style={{ height: "100vh" }}>
-        <div className="fixed inset-0 flex justify-center items-center">
-          🏀 6. Fixed Inset (true fullscreen)
+        {/* Career Averages */}
+        <div className="border-2 border-white rounded p-4 w-full">
+          <h2 className="text-xl uppercase font-bold mb-2">Career Averages</h2>
+          <ul className="space-y-1">
+            {Object.entries(player.stats).map(([key, value]) => (
+              <li key={key}>
+                {key}: {value ?? "N/A"}
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
 
-      {/* 7. Inline-Block + Text-Center (wrapped inside centered flex) */}
-      <div className="h-screen flex justify-center items-center text-center border-2 border-cyan-500">
-        <span className="inline-block">🏀 7. Inline Block Inside Flex</span>
-      </div>
+        {/* Draft Info */}
+        <div className="text-sm text-white">
+          🗓️ Draft Year: {player.clues?.draftYear ?? "?"} | 🏅 Pick: {player.clues?.draftPick ?? "?"}
+        </div>
 
-      {/* 8. Raw Inline CSS Only */}
-      <div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center", border: "2px solid orange" }}>
-        🏀 8. Vanilla Flex CSS (again)
-      </div>
+        {/* Guess Input */}
+        {!gameOver && (
+          <div className="flex justify-center items-center gap-2">
+            <input
+              type="text"
+              value={guess}
+              onChange={(e) => setGuess(e.target.value)}
+              placeholder="Last name..."
+              className="px-4 py-2 rounded-l text-black w-48"
+            />
+            <button
+              onClick={handleSubmit}
+              className="px-4 py-2 rounded-r bg-yellow-400 hover:bg-yellow-300 text-black font-bold"
+            >
+              Submit
+            </button>
+          </div>
+        )}
 
-      {/* 9. Fixed width + mx-auto inside full-page flex */}
-      <div className="h-screen flex items-center border-2 border-lime-500">
-        <div className="w-[300px] mx-auto text-center">🏀 9. Fixed Width + mx-auto</div>
-      </div>
+        {/* Reveal Clue */}
+        {!gameOver && clueIndex < 3 && (
+          <button
+            onClick={revealClue}
+            className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-2 rounded font-bold"
+          >
+            Reveal Clue
+          </button>
+        )}
 
-      {/* 10. Body-filling wrapper with manual padding */}
-      <div className="border-2 border-white" style={{ height: "100vh", paddingTop: "calc(50vh - 1rem)", textAlign: "center" }}>
-        🏀 10. Padding Top Manual Center
-      </div>
+        {/* Additional Clues */}
+        {clueIndex > 0 && (
+          <div className="border-2 border-purple-400 rounded p-4 w-full">
+            <h3 className="font-bold text-lg mb-2">Clue Unlocked:</h3>
+            <div>{player.clues?.draftTeam ?? "???"}</div>
+          </div>
+        )}
 
+        {/* Results */}
+        {gameOver && (
+          <div className="border-2 border-white p-4 rounded w-full">
+            {isCorrect ? (
+              <div className="text-green-400 font-bold animate-bounce">
+                🔥 Correct! {score} points!
+              </div>
+            ) : (
+              <div className="text-red-400 font-bold">
+                ❌ The answer was {player.name}
+              </div>
+            )}
+            <button
+              onClick={nextPlayer}
+              className="mt-4 bg-green-400 hover:bg-green-300 text-black px-6 py-2 rounded font-bold"
+            >
+              Next Player
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
